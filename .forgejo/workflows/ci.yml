@@ -1,0 +1,29 @@
+# MR (pull_request): bun install + SAFE_YOLO_ENDPOINTS=http://spark:8000/v1/chat/completions bun test
+# bun run build - зелёная проверка нужна для мерджа, main защищена.
+# Интеграционный тест классификатора пропускается, если endpoint недоступен с раннера.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: pillow # раннер на хосте (systemd forgejo-runner, пользователь deploy)
+    steps:
+      - name: test
+        run: |
+          rm -rf src && git init -q src && cd src
+          git fetch -q --depth 1 "http://x:${{ github.token }}@127.0.0.1:3001/${{ github.repository }}.git" "${{ github.event.pull_request.head.sha || github.sha }}"
+          git checkout -q FETCH_HEAD
+          bun install --frozen-lockfile
+          SAFE_YOLO_ENDPOINTS=http://spark:8000/v1/chat/completions bun test
+          bun run build
+      - name: public hygiene
+        run: |
+          cd src
+          sh scripts/public-hygiene.sh
+      - name: readme pins the package version
+        run: |
+          cd src
+          sh scripts/sync-version.sh
+          git diff --exit-code README.md README.ru.md
