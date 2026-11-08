@@ -1,0 +1,6 @@
+services:
+  catshell:
+    build: .
+    ports:
+      - "8011:8011"
+    restart: unless-stopped

@@ -1,0 +1,41 @@
+{
+  "name": "@safe-yolo/agent-guard",
+  "version": "0.2.15",
+  "description": "safe-yolo: shell command guard for coding agents (opencode plugin + claude code hook) on a local decision model",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./core": "./src/core.ts"
+  },
+  "files": [
+    "src",
+    "dist",
+    "examples",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safe-yolo/agent-guard.git"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "permissions",
+    "safety",
+    "shell"
+  ],
+  "dependencies": {
+    "@opencode/plugin": "2.2.5"
+  },
+  "bin": {
+    "safe-yolo-guard": "dist/guard.mjs"
+  },
+  "scripts": {
+    "build": "bun build src/guard-entry.ts --target=node --outfile dist/guard.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
